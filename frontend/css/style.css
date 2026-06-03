@@ -27,8 +27,10 @@ body {
 
 #app {
     display: grid;
-    grid-template-columns: 280px 1fr auto;
+    grid-template-columns: 280px 1fr;
     height: 100vh;
+    position: relative;
+    overflow: hidden;
 }
 
 /* Sidebar */
@@ -250,18 +252,40 @@ main {
 #send-btn:hover:not(:disabled) { background: var(--primary-hover); }
 #send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* Results panel */
+/* Results panel — overlay on top of main, doesn't squeeze chat */
+#panel-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    pointer-events: none;
+}
+#panel-overlay.hidden { display: none; }
+#panel-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    pointer-events: auto;
+}
 #results-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
     width: 420px;
+    height: 100%;
     background: var(--surface);
     border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: slideIn 0.15s ease-out;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.12);
+    z-index: 100;
+    pointer-events: auto;
+    animation: panelSlideIn 0.15s ease-out;
 }
-@keyframes slideIn { from { width: 0; opacity: 0; } to { width: 420px; opacity: 1; } }
-#results-panel.hidden { display: none; }
+@keyframes panelSlideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 .panel-header {
     display: flex;
     justify-content: space-between;

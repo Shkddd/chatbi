@@ -14,6 +14,8 @@ const suggestions = $('#suggestions');
 const sqlDisplay = $('#sql-display');
 const sqlText = $('#sql-text');
 const resultsPanel = $('#results-panel');
+const panelOverlay = $('#panel-overlay');
+const panelBackdrop = $('#panel-backdrop');
 const chartContainer = $('#chart-container');
 const chartCanvas = $('#chart-canvas');
 const tableContainer = $('#table-container');
@@ -91,10 +93,9 @@ function setupEvents() {
         navigator.clipboard.writeText(sqlText.textContent).catch(() => {});
     });
 
-    // Close results panel
-    $('#close-panel').addEventListener('click', () => {
-        resultsPanel.classList.add('hidden');
-    });
+    // Close results panel (X button + backdrop click)
+    $('#close-panel').addEventListener('click', closePanel);
+    panelBackdrop.addEventListener('click', closePanel);
 
     // New chat
     $('#new-chat-btn').addEventListener('click', newChat);
@@ -115,6 +116,7 @@ async function send() {
     sendBtn.disabled = true;
     sqlDisplay.classList.add('hidden');
     resultsPanel.classList.add('hidden');
+    panelOverlay.classList.add('hidden');
 
     // Show typing
     const typingId = 'typing-' + Date.now();
@@ -149,9 +151,9 @@ async function send() {
         // Show results panel
         if (data.data && data.data.length > 0) {
             renderResults(data);
-            resultsPanel.classList.remove('hidden');
+            panelOverlay.classList.remove('hidden');
         } else if (data.error) {
-            resultsPanel.classList.remove('hidden');
+            panelOverlay.classList.remove('hidden');
             renderError(data);
         }
     } catch (err) {
@@ -247,6 +249,11 @@ function renderChart(chartData) {
     });
 }
 
+// ====== Close results panel ======
+function closePanel() {
+    panelOverlay.classList.add('hidden');
+}
+
 // ====== New conversation ======
 function newChat() {
     // Clear server-side history
@@ -256,6 +263,7 @@ function newChat() {
     welcomeEl.style.display = '';
     sqlDisplay.classList.add('hidden');
     resultsPanel.classList.add('hidden');
+    panelOverlay.classList.add('hidden');
     if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
     input.focus();
 }

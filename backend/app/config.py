@@ -1,8 +1,21 @@
 """ChatBI configuration — loads from .env with sensible defaults."""
 
 import os
+import re
 from pathlib import Path
 from functools import lru_cache
+
+# Load .env from project root manually (avoid dotenv dependency)
+_env_path = Path(__file__).parent.parent.parent / ".env"
+if _env_path.exists():
+    for line in _env_path.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            key, val = line.split("=", 1)
+            key = key.strip()
+            val = val.strip().strip("\"'")
+            if key and not os.environ.get(key):
+                os.environ[key] = val
 
 
 class Settings:

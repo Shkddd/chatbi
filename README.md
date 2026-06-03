@@ -29,6 +29,8 @@ python -m uvicorn app.main:app --reload --port 8000
 ```bash
 docker compose up --build
 ```
+<img width="2932" height="1588" alt="image" src="https://github.com/user-attachments/assets/97702ac4-fe04-4b6a-a24c-b9ba02d078df" />
+
 
 ## 架构
 
